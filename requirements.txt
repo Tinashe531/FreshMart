@@ -1,0 +1,14 @@
+# FreshMart Demand Forecasting System
+# Python environment
+# Install with: pip install -r requirements.txt
+
+pandas>=2.2
+numpy>=1.26
+scikit-learn>=1.4
+xgboost>=2.0
+statsmodels>=0.14      # seasonal baseline (SARIMA) benchmark
+shap>=0.45             # explainability (local + global)
+mlflow>=2.12           # experiment tracking/model versioning
+jupyter>=1.0           # notebooks/ EDA and prototyping
+pytest>=8.0            # tests/
+python-dotenv>=1.0     # environment/config management
