@@ -1,0 +1,120 @@
+Module 1 Assignment: Business Analytics Project Vision Document
+A Demand Forecasting System for Supporting Procurement Planning of Perishable Vegetables at FreshMart
+1. Business Vertical & Problem Context
+Vertical: Retail (fresh grocery and perishables). 
+Core business process: demand forecasting to support procurement planning.
+FreshMart is a small, growing retail company with three stores that sources fresh vegetables directly from local farmers and receives replenishment deliveries every Monday, Wednesday, and Saturday. Since vegetables are highly perishable, the cost of getting demand wrong is immediate and visible; over-ordering leads to spoilage and waste, while under-ordering leads to stockouts and lost sales. The procurement manager currently rely on experience and recent sales trends, an approach that scales poorly as sales volume and demand variability grow. Forecasting demand for vegetables specifically is harder than forecasting most retail categories, since shelf life, seasonality, and price sensitivity interact in ways that push simple trend-based estimates off course (Priyadarshi et al., 2019). This project will pilot the forecasting system at FreshMart's flagship store before considering expansion to the remaining two locations.
+Dataset
+The project uses a public, non-synthetic retail dataset (Kaggle) comprising 878,503 transaction records for the flagship store, an item/category master (251 items), a wholesale price history, and a per-item loss-rate table. The additional wholesale price and loss-rate tables provide valuable business context that may be incorporated into feature engineering and procurement recommendations during later project stages. The dataset exceeds the assignment's 5,000-record minimum by a wide margin.
+
+2. Vision, Goals & Ethical Principles
+2.1 Vision Statement
+FreshMart will replace intuition-driven ordering with an evidence-based forecast. Before each replenishment cycle, the procurement manager will see how much of each high-volume vegetable customers are expected to buy before the next delivery. So that ordering decisions are based on data, not memory.
+2.2 Measurable Goals
+These are illustrative starting targets; they will be re-baselined against actual historical performance once EDA is complete in Module 3.
+1.	Achieve a forecast accuracy of ≤20% MAPE for the top 10 highest-volume vegetables within the pilot window.
+2.	Decrease volume of spoilage (kilograms) for the forecasted goods by 15% three months from go-live compared to the previous three months.
+3.	Decrease the number of vegetable stockouts by 20% in the same period.
+4.	80% adoption rate: procurement managers refer to the dashboard before placing an order in four out of five replenishment cycles measured through dashboard access logs or procurement workflow records.
+2.3 Ethical AI Vision & Fairness Objectives
+The system is built as a decision-support tool, not a decision-maker. It must therefore remain transparent about how a forecast was produced and how confident it is. The system must keep a human procurement manager accountable for the final order, and must not let modeling convenience quietly disadvantage particular vegetables, suppliers, or store contexts.
+Fairness Objectives are as follows: 
+•	Don't allow forecast accuracy to focus on a few high-volume items and slip silently for lower-volume vegetables from smaller local farmers that could bump those items out of the ordering rotation.
+•	Audit accuracy by category, not just overall, so that a category-level blind spot cannot hide behind a good overall error score.
+•	Keep every forecast overridable, and log overrides, so the model cannot become a de facto order-placing system without anyone deciding that it should.
+
+3. Stakeholders, Users & Ethics Oversight
+Group	Type	Role / Interest
+Procurement Manager	Primary user	Uses the dashboard to plan orders for each replenishment cycle.
+Store Operations Lead	User	Confirms forecasts are consistent with shelf space and staffing on delivery days.
+Local Farmer-Suppliers	Stakeholder	Affected by changes in order volume and timing driven by forecasts.
+Data & Analytics Team	Builder	Develops, validates, and maintains the model and dashboard.
+Finance	Stakeholder	Tracks waste-cost and procurement-cost impact of the pilot.
+Senior Management	Sponsor	Approves the pilot and decides on store-wide expansion.
+Customers	Indirect stakeholder	Experience the effects of the pilot through product freshness and availability.
+Ethics Oversight Body
+At FreshMart’s size, a separate ethics compliance office is not feasible. Instead, the project proposes a lightweight internal Data & AI Governance Committee comprising the analytics lead, the procurement manager, and the store operations lead. They meet quarterly during the pilot to review fairness audits (Section 3), override logs, and any proposed changes to the model.
+
+4. Describe the Analytics Product / Solution
+The proposed solution is an interactive procurement decision support dashboard that is refreshed prior to each Monday, Wednesday, and Saturday replenishment cycle. The procurement manager will be given the expected demand for each selected vegetable, 95% prediction interval, suggested procurement range, and recent demand trends to inform decisions when ordering from suppliers.
+4.1 Two Integrated Analytics Types
+1.	Predictive analytics: A machine learning model trained on historical transaction data predicts the expected demand for each selected vegetable before the next replenishment cycle.
+2.	Light-touch prescriptive analytics: Instead of providing a single-point forecast, the dashboard translates forecast demand, the 95% prediction interval on the forecast, and FreshMart’s procurement policy into a recommended procurement range. Historical product loss rates can also be used to support procurement decisions as appropriate, but the procurement manager is responsible for the final order quantity.
+This makes the system a decision support tool rather than an automated ordering system. It helps the procurement manager make more informed replenishment decisions, while retaining human judgement and accountability. The system does not directly decide on the final quantities to be purchased, optimize inventory , place orders with suppliers, or replace the procurement manager.
+4.2 Proposed Technical Stack
+Project Phase	Tool / Platform
+Data ingestion & storage	Raw CSV files stored in a version-controlled GitHub repository during the pilot; migrating to PostgreSQL with cloud backup if the solution expands across all FreshMart stores.
+Data pipeline / ETL	Python (Pandas, NumPy) scripts during the pilot; automated using GitHub Actions or a cloud scheduler as the solution matures.
+Modeling environment	Python (Jupyter Notebook) using Pandas, Scikit-learn, and XGBoost for model development and evaluation.
+Forecast storage	Forecast outputs stored as structured CSV files during the pilot; migrated to PostgreSQL for centralized access as the solution scales.
+Dashboard/deployment	Power BI dashboard published through Power BI Service for the procurement manager.
+Version control	Git and GitHub for source code, documentation, and model version management.
+4.3 Proposed Repository Structure
+freshmart-demand-forecast/
+├── README.md
+├── docs/
+│   ├── vision_document.docx
+│   └── ethics/
+│       ├── fairness_audit_log.md
+│       └── ethics_committee_notes.md
+├── data/
+│   ├── raw/              # Original source datasets
+│   └── processed/        # Cleaned and transformed datasets
+├── notebooks/            # EDA and model experimentation
+├── src/
+│   ├── data_prep/
+│   ├── models/
+│   └── utils/
+├── dashboards/
+│   └── procurement_dashboard.pbix
+├── tests/
+├── requirements.txt
+└── .github/
+ 
+
+5. Requirements, Risks & Constraints
+5.1 Functional Requirements
+•	Daily transactional data capture (date, item, quantity sold, price, sale/return flag).
+•	Generate a per-item forecast ahead of each of the three weekly replenishment cycles.
+•	Display forecast, confidence range, and suggested order range on the dashboard.
+•	Let managers log the actual order placed against the forecast, to support later accuracy review.
+5.2 Non-Functional Requirements
+•	Forecast available at least 12 hours before each replenishment cycle.
+•	Dashboard usable by non-technical staff without training documentation.
+•	Data refresh automated, with minimal manual intervention.
+•	Pilot explicitly scoped to the flagship store's data; not assumed to generalize to the other two stores without validation.
+5.3 Key Risks & Constraints
+•	Data quality: the raw data mixes sales and returns in a single field and lacks a store identifier, requiring careful handling in Module 3.
+•	Project timeline: The limited timeframe available to complete the capstone restricts the depth of implementation, testing, and evaluation that can be achieved within the project lifecycle.
+•	Generalization: a model trained on one store's data may not transfer cleanly to the other two stores at expansion.
+•	Model drift: seasonal shifts in vegetable demand will require periodic re-validation, not a one-time model build.
+These risks mirror common limitations flagged in the perishable-demand-forecasting literature, particularly regarding data quality and the need for ongoing model revalidation rather than a single, static deployment (Kaizer et al., 2022).
+5.4 Ethical Risk Register
+Risk	Likelihood	Impact	Mitigation
+Category bias resulting in under-forecasting of lower-volume vegetables	Medium	Medium	Per-category accuracy audits, not just aggregate error.
+Over-reliance on forecasts reducing managerial judgment	Medium	Medium	Frame all outputs as advisory; keep an override log; review it in governance meetings.
+Unauthorized access to sensitive supplier pricing information	Low	Medium	Restrict wholesale price data to authorized analytics roles.
+Model drift causing waste or stockouts	Medium	High	Scheduled re-validation each pilot phase; documented rollback plan.
+
+6. Quality, Documentation & Governance
+6.1 Documentation & Standards
+Throughout the analytics lifecycle, project documentation will be maintained to support transparency, traceability, and future maintenance. Business documentation will include the Vision Document, project decisions, and stakeholder requirements. Technical documentation will include a data dictionary, model cards, repository documentation (README), and a decision log  capturing key modeling and implementation decisions. All project deliverables will be in NXU formatting and citation standards and will reflect professional documentation practices expected of real-world analytics projects.
+6.2 Versioning Strategy
+•	Code: Git Flow with main, develop, and feature branches, and pull requests and code reviews before changes are merged into the main branch.
+•	Models: Semantic Versioning (vMAJOR.MINOR.PATCH), with each trained model accompanied by a model card documenting the training dataset, parameters, evaluation metrics, and release date.
+•	Data: Immutable, date-stamped snapshots of processed datasets stored under data/processed/, ensuring that every forecast and model version can be traced back to the exact dataset used for training and evaluation.
+6.3 Data Governance Principles
+•	Access to raw and processed data is limited to the project team named in Section 4.
+•	Wholesale price data is treated as confidential and is not exposed on the manager-facing dashboard.
+•	Raw data is retained for the duration of the pilot and archived (not deleted) at pilot close, pending a decision on expansion.
+References
+1.	Jens Huber and Heiner Stuckenschmidt. 2020. Daily retail demand forecasting using machine learning with emphasis on calendric special days. International Journal of Forecasting. Volume 36. Issue 4. https://doi.org/10.1016/j.ijforecast.2020.02.003
+2.	João Victor Kaizer, Rosangela Cristina Tavares de Souza, and Leandro Barros Ribeiro Aylon. 2022. Quantitative models for forecasting demand for perishable products: A systematic review. Proceedings of the Ibero-American Conference on Artificial Intelligence. https://doi.org/10.1007/978-3-031-20891-6_31
+3.	Rakesh Priyadarshi, Abhijit Panigrahi, Satyabrata Routroy, and G. K. Garg. 2019. Demand forecasting at retail stage for selected vegetables: A performance analysis. Journal of Modelling in Management. Volume 14. Issue 4. https://doi.org/10.1108/JM2-01-2019-0005
+4.	YAPWH. Updated 2022. Supermarket Sales Data. Kaggle. https://www.kaggle.com/datasets/yapwh1208/supermarket-sales-data
+
+
+
+
+
+
