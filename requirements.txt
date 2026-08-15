@@ -1,14 +1,13 @@
-# FreshMart Demand Forecasting System
-# Python environment
+# FreshMart Data Pipeline — Module 3
 # Install with: pip install -r requirements.txt
 
-pandas>=2.2
-numpy>=1.26
-scikit-learn>=1.4
-xgboost>=2.0
-statsmodels>=0.14      # seasonal baseline (SARIMA) benchmark
-shap>=0.45             # explainability (local + global)
-mlflow>=2.12           # experiment tracking/model versioning
-jupyter>=1.0           # notebooks/ EDA and prototyping
-pytest>=8.0            # tests/
-python-dotenv>=1.0     # environment/config management
+pandas==3.0.2
+numpy==2.4.4
+pyarrow>=17.0.0
+great_expectations==1.20.0
+pytest==9.1.1
+
+# Airflow is the orchestration layer.
+# Install it in a dedicated Airflow/Linux/WSL environment
+# using the official Airflow constraints file.
+apache-airflow==2.10.5
