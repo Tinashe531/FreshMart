@@ -1,0 +1,6 @@
+{"timestamp": "2026-08-15T10:41:05+00:00", "event": "RUN_STARTED", "source": "annex1-4.csv", "transaction_records": 878503, "item_master_records": 251}
+{"timestamp": "2026-08-15T10:41:14+00:00", "event": "CLEANING_COMPLETED", "records": 878503, "duplicates_removed": 0, "unmatched_item_master_records": 0}
+{"timestamp": "2026-08-15T10:41:16+00:00", "event": "TRANSFORMATION_COMPLETED", "item_day_records": 46599, "negative_net_demand_flagged": 4}
+{"timestamp": "2026-08-15T10:41:17+00:00", "event": "OUTPUT_CREATED", "path": "C:\\Users\\user\\Downloads\\Nexford University\\Capstone\\FreshMart\\data\\processed\\freshmart_item_day.parquet", "records": 46599}
+{"timestamp": "2026-08-15T10:52:52+00:00", "event": "BIAS_CHECK_COMPLETED", "categories_checked": 6, "categories_flagged": 0, "threshold_pp": 2.0}
+{"timestamp": "2026-08-15T10:52:52+00:00", "event": "ANONYMIZATION_SCAN_COMPLETED", "columns_scanned": 8, "pii_columns_removed": 0, "pii_columns": []}

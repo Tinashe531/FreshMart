@@ -1,0 +1,8 @@
+# Processing/validation/test environment only — deliberately excludes
+# apache-airflow. Airflow is the orchestration layer that calls into this
+# environment; it is not part of what this container reproduces.
+pandas==3.0.2
+numpy==2.4.4
+pyarrow>=17.0.0
+great_expectations==1.20.0
+pytest==9.1.1

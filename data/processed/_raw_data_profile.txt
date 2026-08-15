@@ -1,0 +1,90 @@
+======================================================================
+annex1.csv — Item Master
+======================================================================
+columns: ['Item Code', 'Item Name', 'Category Code', 'Category Name']
+row count: 251
+dtypes:
+Item Code        int64
+Item Name          str
+Category Code    int64
+Category Name      str
+dtype: object
+unique Item Code count: 251
+duplicate Item Code rows: 0
+missing values per column:
+Item Code        0
+Item Name        0
+Category Code    0
+Category Name    0
+dtype: int64
+unique category count: 6
+
+======================================================================
+annex2.csv — Transaction data
+======================================================================
+columns: ['Date', 'Time', 'Item Code', 'Quantity Sold (kilo)', 'Unit Selling Price (RMB/kg)', 'Sale or Return', 'Discount (Yes/No)']
+row count: 878503
+dtypes:
+Date                               str
+Time                               str
+Item Code                        int64
+Quantity Sold (kilo)           float64
+Unit Selling Price (RMB/kg)    float64
+Sale or Return                     str
+Discount (Yes/No)                  str
+dtype: object
+missing values per column:
+Date                           0
+Time                           0
+Item Code                      0
+Quantity Sold (kilo)           0
+Unit Selling Price (RMB/kg)    0
+Sale or Return                 0
+Discount (Yes/No)              0
+dtype: int64
+exact duplicate rows (all columns): 0
+unique Item Code count: 246
+date range: 2020-07-01 to 2023-06-30
+'Sale or Return' value counts:
+Sale or Return
+sale      878042
+return       461
+Name: count, dtype: int64
+'Discount (Yes/No)' value counts:
+Discount (Yes/No)
+No     831137
+Yes     47366
+Name: count, dtype: int64
+Quantity Sold (kilo) — min: -9.082, max: 160.0, negative values: 461, zero values: 0
+Unit Selling Price — min: 0.1, max: 119.9, negative values: 0, zero values: 0
+'sale' rows with negative quantity: 0 of 878042
+'return' rows with negative quantity: 461 of 461 (if 0, quantity is NOT pre-signed — must derive sign from Sale or Return flag)
+distinct transaction Item Codes NOT found in Item Master: 0
+
+======================================================================
+annex3.csv — Wholesale price history
+======================================================================
+columns: ['Date', 'Item Code', 'Wholesale Price (RMB/kg)']
+row count: 55982
+missing values per column:
+Date                        0
+Item Code                   0
+Wholesale Price (RMB/kg)    0
+dtype: int64
+duplicate (Date, Item Code) rows: 0
+unique Item Code count: 251
+date range: 2020-07-01 to 2023-06-30
+Wholesale Price — min: 0.01, max: 141.0, negative: 0
+
+======================================================================
+annex4.csv — Loss rate
+======================================================================
+columns: ['Item Code', 'Item Name', 'Loss Rate (%)']
+row count: 251
+missing values per column:
+Item Code        0
+Item Name        0
+Loss Rate (%)    0
+dtype: int64
+duplicate Item Code rows: 0
+Loss Rate (%) — min: 0.0, max: 29.25

@@ -1,0 +1,107 @@
+{
+  "success": true,
+  "statistics": {
+    "evaluated_expectations": 11,
+    "successful_expectations": 11,
+    "unsuccessful_expectations": 0,
+    "success_percent": 100.0
+  },
+  "results": [
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "date"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "date"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_between",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "date",
+        "min_value": "2020-07-01 00:00:00",
+        "max_value": "2023-06-30 00:00:00"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "item_code"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "item_code",
+        "type_": "str"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_column_values_to_not_be_null",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "item_code"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_column_value_lengths_to_be_between",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "item_code",
+        "min_value": "1"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_column_to_exist",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "daily_demand_kg"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_column_values_to_be_of_type",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column": "daily_demand_kg",
+        "type_": "float64"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_compound_columns_to_be_unique",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "column_list": "['date', 'item_code']"
+      },
+      "success": true
+    },
+    {
+      "expectation_type": "expect_table_row_count_to_be_between",
+      "kwargs": {
+        "batch_id": "freshmart_pandas-item_day",
+        "min_value": "1000",
+        "max_value": "300000"
+      },
+      "success": true
+    }
+  ],
+  "monitored_negative_net_demand_item_days": 4,
+  "monitored_negative_net_demand_treated_as_hard_failure": false
+}
