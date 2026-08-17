@@ -1,0 +1,236 @@
+{
+  "overall_comparison": [
+    {
+      "model": "seasonal_naive",
+      "n": 3509,
+      "rmse": 6.787357290645645,
+      "mae": 4.245263892846966,
+      "mape_pct": 84.07909739087248,
+      "r2": 0.5533824753661611,
+      "bias": 0.2624334568253064
+    },
+    {
+      "model": "random_forest",
+      "n": 3509,
+      "rmse": 5.00292979414438,
+      "mae": 3.1548404322490073,
+      "mape_pct": 72.84542928328219,
+      "r2": 0.7573484026857787,
+      "bias": 0.25264033868190583
+    },
+    {
+      "model": "xgboost",
+      "n": 3509,
+      "rmse": 5.021016778308054,
+      "mae": 3.139317493904279,
+      "mape_pct": 71.45278010089969,
+      "r2": 0.755590725000839,
+      "bias": 0.1387815343868226
+    }
+  ],
+  "category_breakdown": [
+    {
+      "model": "random_forest",
+      "category_name": "Aquatic Tuberous Vegetables",
+      "n": 425,
+      "rmse": 2.1116114048815917,
+      "mae": 1.4831542241419875,
+      "mape_pct": 84.17329042666496,
+      "bias": 0.21677623413886446
+    },
+    {
+      "model": "random_forest",
+      "category_name": "Cabbage",
+      "n": 171,
+      "rmse": 4.404959972447969,
+      "mae": 3.423671821584817,
+      "mape_pct": 59.209067683947225,
+      "bias": 0.6334768998500263
+    },
+    {
+      "model": "random_forest",
+      "category_name": "Capsicum",
+      "n": 804,
+      "rmse": 5.049079987618938,
+      "mae": 3.328212441733938,
+      "mape_pct": 72.07100717317547,
+      "bias": 0.36666466786917873
+    },
+    {
+      "model": "random_forest",
+      "category_name": "Edible Mushroom",
+      "n": 642,
+      "rmse": 4.7622059138725,
+      "mae": 2.9787372961548964,
+      "mape_pct": 52.24604223202822,
+      "bias": 0.42567134052657785
+    },
+    {
+      "model": "random_forest",
+      "category_name": "Flower/Leaf\u00a0Vegetables",
+      "n": 1225,
+      "rmse": 5.9920468356625065,
+      "mae": 3.772644191416325,
+      "mape_pct": 82.21811889840319,
+      "bias": 0.1005192704215847
+    },
+    {
+      "model": "random_forest",
+      "category_name": "Solanum",
+      "n": 242,
+      "rmse": 3.8437480995293534,
+      "mae": 2.664567637354913,
+      "mape_pct": 72.36350338434112,
+      "bias": -0.02130165619788477
+    },
+    {
+      "model": "xgboost",
+      "category_name": "Aquatic Tuberous Vegetables",
+      "n": 425,
+      "rmse": 2.169390150002593,
+      "mae": 1.4670418411109027,
+      "mape_pct": 77.1037560537987,
+      "bias": 0.22282958421482763
+    },
+    {
+      "model": "xgboost",
+      "category_name": "Cabbage",
+      "n": 171,
+      "rmse": 4.392218084578505,
+      "mae": 3.404629450993231,
+      "mape_pct": 61.24120382595035,
+      "bias": 0.8478769075047901
+    },
+    {
+      "model": "xgboost",
+      "category_name": "Capsicum",
+      "n": 804,
+      "rmse": 5.036626282773511,
+      "mae": 3.2814111557344896,
+      "mape_pct": 66.92355684901932,
+      "bias": 0.20019968969252575
+    },
+    {
+      "model": "xgboost",
+      "category_name": "Edible Mushroom",
+      "n": 642,
+      "rmse": 4.829486559787537,
+      "mae": 2.962432975605641,
+      "mape_pct": 50.2316039964895,
+      "bias": 0.2617810902521246
+    },
+    {
+      "model": "xgboost",
+      "category_name": "Flower/Leaf\u00a0Vegetables",
+      "n": 1225,
+      "rmse": 5.991415939329048,
+      "mae": 3.769634321176568,
+      "mape_pct": 85.21864264318478,
+      "bias": -0.038538895861178056
+    },
+    {
+      "model": "xgboost",
+      "category_name": "Solanum",
+      "n": 242,
+      "rmse": 3.9738726127089294,
+      "mae": 2.6952152253202173,
+      "mape_pct": 70.40659705246229,
+      "bias": -0.1426404270081481
+    }
+  ],
+  "volume_tier_breakdown": [
+    {
+      "model": "random_forest",
+      "volume_tier": "high_volume",
+      "n": 2001,
+      "rmse": 6.264615082265881,
+      "mae": 4.333726052954552,
+      "mape_pct": 65.63347139911737,
+      "bias": 0.3134539620721427
+    },
+    {
+      "model": "random_forest",
+      "volume_tier": "low_volume",
+      "n": 483,
+      "rmse": 1.3010793870472377,
+      "mae": 0.9506859307554045,
+      "mape_pct": 107.21507949928666,
+      "bias": 0.21490229151694656
+    },
+    {
+      "model": "random_forest",
+      "volume_tier": "mid_volume",
+      "n": 991,
+      "rmse": 2.6421594019377648,
+      "mae": 1.8834843837568527,
+      "mape_pct": 70.17524905575641,
+      "bias": 0.18316176610083523
+    },
+    {
+      "model": "xgboost",
+      "volume_tier": "high_volume",
+      "n": 2001,
+      "rmse": 6.275734632274825,
+      "mae": 4.3192223777575585,
+      "mape_pct": 65.97546313637545,
+      "bias": 0.24773936093562485
+    },
+    {
+      "model": "xgboost",
+      "volume_tier": "low_volume",
+      "n": 483,
+      "rmse": 1.2576040187117643,
+      "mae": 0.9252935391331313,
+      "mape_pct": 102.64789327862994,
+      "bias": 0.018544238395572444
+    },
+    {
+      "model": "xgboost",
+      "volume_tier": "mid_volume",
+      "n": 991,
+      "rmse": 2.6325627678031114,
+      "mae": 1.8562030160737446,
+      "mape_pct": 66.24133182891696,
+      "bias": -0.007917884669318349
+    }
+  ],
+  "top10_volume_results": [
+    {
+      "model": "random_forest",
+      "n": 564,
+      "rmse": 7.636447790033222,
+      "mae": 5.336575042495938,
+      "mape_pct": 75.82154242969516,
+      "bias": 0.578923213541339,
+      "meets_20pct_mape_target": false
+    },
+    {
+      "model": "xgboost",
+      "n": 564,
+      "rmse": 7.784803663956327,
+      "mae": 5.383556473106358,
+      "mape_pct": 80.57628078839126,
+      "bias": 0.7449220521162587,
+      "meets_20pct_mape_target": false
+    }
+  ],
+  "model_selection_evidence": {
+    "primary_metric": "RMSE",
+    "best_rmse_model": "random_forest",
+    "best_mae_model": "xgboost",
+    "best_mape_model": "xgboost",
+    "lowest_absolute_bias_model": "xgboost",
+    "best_top10_mape_model": "random_forest",
+    "selection_status": "provisional; review category and volume-tier performance before final model selection"
+  },
+  "leakage_checks": {
+    "train_max_date_before_test_min_date": true,
+    "no_overlap_in_dates": true,
+    "target_not_in_feature_columns": true,
+    "required_historical_features_present": true,
+    "lag_1_matches_historical_demand": true,
+    "lag_7_matches_historical_demand": true,
+    "lag_14_matches_historical_demand": true,
+    "historical_lag_features_leakage_safe": true
+  }
+}

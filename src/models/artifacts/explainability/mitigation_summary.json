@@ -1,0 +1,24 @@
+{
+  "gap_before_pp": 36.672430142254484,
+  "gap_after_pp": 28.592159545461968,
+  "top10_mape_before": 80.57628078839126,
+  "top10_mape_after": 77.63580288007196,
+  "overall_before": {
+    "rmse": 5.021016778308054,
+    "mae": 3.139317493904279,
+    "mape_pct": 71.45278010089969,
+    "r2": 0.755590725000839,
+    "bias": 0.1387815343868226,
+    "n": 3509
+  },
+  "overall_after": {
+    "rmse": 4.963940173517637,
+    "mae": 3.10773218848706,
+    "mape_pct": 69.733205902274,
+    "r2": 0.7611158062064409,
+    "bias": 0.09031702139874268,
+    "n": 3509
+  },
+  "decision": "gap reduced but mitigation adopted",
+  "final_model_choice": "mitigated"
+}

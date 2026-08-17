@@ -1,11 +1,30 @@
-# FreshMart Data Pipeline — Module 3
+# FreshMart ML Pipeline Module 4
 # Install with: pip install -r requirements.txt
 
 pandas==3.0.2
 numpy==2.4.4
 pyarrow>=17.0.0
+
+# Module 3 data quality and testing
 great_expectations==1.20.0
 pytest==9.1.1
+
+# Module 4 modelling and evaluation
+scikit-learn
+xgboost
+joblib
+
+# Module 4 explainability
+shap
+lime
+
+# Module 4 experiment tracking
+mlflow==3.15.1
+
+# Module 4 API deployment
+fastapi
+uvicorn
+pydantic
 
 # Airflow is the orchestration layer.
 # Install it in a dedicated Airflow/Linux/WSL environment

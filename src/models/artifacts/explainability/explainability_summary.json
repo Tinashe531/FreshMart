@@ -1,0 +1,74 @@
+{
+  "shap_top_features": [
+    {
+      "feature": "roll_mean_7",
+      "mean_abs_shap": 4.113008975982666
+    },
+    {
+      "feature": "lag_1",
+      "mean_abs_shap": 2.4841368198394775
+    },
+    {
+      "feature": "day_of_week",
+      "mean_abs_shap": 1.1796518564224243
+    },
+    {
+      "feature": "roll_mean_14",
+      "mean_abs_shap": 0.7365066409111023
+    },
+    {
+      "feature": "item_expanding_mean_demand",
+      "mean_abs_shap": 0.45323318243026733
+    },
+    {
+      "feature": "lag_14",
+      "mean_abs_shap": 0.27728450298309326
+    },
+    {
+      "feature": "day_of_year",
+      "mean_abs_shap": 0.21216550469398499
+    },
+    {
+      "feature": "price_change_pct_7",
+      "mean_abs_shap": 0.18750588595867157
+    }
+  ],
+  "category_mape_range_pp": 34.98703864669528,
+  "volume_tier_mape_range_pp": 36.672430142254484,
+  "mitigation_threshold_pp": 25.0,
+  "mitigation_triggered": true,
+  "lime_cross_check_top_features": [
+    [
+      "roll_mean_7 > 13.30",
+      16.014890843404526
+    ],
+    [
+      "lag_1 > 12.81",
+      12.075103730426472
+    ],
+    [
+      "roll_mean_14 > 13.50",
+      3.7372560932296155
+    ],
+    [
+      "lag_14 > 12.79",
+      2.464434159277969
+    ],
+    [
+      "day_of_week > 5.00",
+      1.3897624929516295
+    ],
+    [
+      "price_lag_1 <= 4.90",
+      1.062269071525026
+    ],
+    [
+      "lag_7 > 12.86",
+      -0.7883876437472133
+    ],
+    [
+      "3.00 < month <= 7.00",
+      -0.648598241626633
+    ]
+  ]
+}
