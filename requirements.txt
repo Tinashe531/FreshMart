@@ -30,3 +30,4 @@ pydantic
 # Install it in a dedicated Airflow/Linux/WSL environment
 # using the official Airflow constraints file.
 apache-airflow==2.10.5
+#updated on 17/8/2026
