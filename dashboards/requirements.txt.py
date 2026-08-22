@@ -1,0 +1,30 @@
+# FreshMart Demand Forecasting Dashboard -- Module 5
+# Scoped to what dashboards/app.py actually needs at runtime.
+#
+# Streamlit Community Cloud searches the entrypoint file's own directory for
+# a requirements file BEFORE falling back to the repo root, so this file
+# takes priority over the root requirements.txt when this app is deployed.
+# The root requirements.txt is left untouched -- it documents the full
+# Module 3/4 pipeline (Airflow, MLflow, Great Expectations, FastAPI, etc.)
+# and is not needed to run this dashboard.
+#
+# Versions pinned to what this app has actually been tested against.
+
+streamlit==1.62.0
+plotly==6.9.0
+pandas==3.0.2
+numpy==2.4.4
+joblib==1.5.3
+shap==0.52.0
+
+# Not imported directly in evidence.py/app.py, but required: the evidence
+# bundle unpickles an XGBoost model object, so the xgboost package must be
+# installed in the runtime environment for joblib.load() to succeed.
+xgboost==3.4.1
+
+# NOTE: pyarrow is deliberately NOT included here. It's only needed to
+# regenerate the evidence bundle (reading the raw parquet files in
+# src/evaluation/evidence.py's __main__ block) -- the deployed app never
+# reads parquet directly, only the precomputed .pkl bundle via joblib.
+# If you rerun evidence.py locally to refresh the bundle, install pyarrow
+# in your dev environment (see the root requirements.txt), not here.
