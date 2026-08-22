@@ -40,7 +40,7 @@ from src.evaluation.evidence import (
     FEATURE_PLAIN_LANGUAGE,
 )
 
-BUNDLE_PATH = REPO_ROOT / "src" / "evaluation" / "module5_evidence_bundle.pkl"
+BUNDLE_PATH = REPO_ROOT / "src" / "evaluation" / "evidence_bundle.pkl"
 
 # ============================================================================
 # PALETTE (mirrors .streamlit/config.toml -- kept here too since Plotly
