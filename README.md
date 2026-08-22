@@ -15,7 +15,7 @@ Automated ordering, inventory optimization, and expansion to additional stores a
 - Scikit-learn
 - XGBoost
 - Jupyter
-- Power BI
+- Streamlit
 - Git and GitHub
 
 ## Repository Structure
