@@ -2,10 +2,11 @@
 FreshMart Demand Forecasting Dashboard
 ========================================
 
-Streamlit app for Module 5. Reads everything static from the single
-evidence bundle produced by src/evaluation/evidence.py. The only live
-model calls happen in the What-If tool and the per-item SHAP explanation
-in the Forecast Explorer -- both imported directly from that same script.
+Streamlit app for Module 5 + Task 7. Reads everything static from two
+bundles: src/evaluation/evidence_bundle.pkl (Module 5) and
+src/monitoring/monitoring_bundle.pkl (Task 7). The only live model calls
+happen in the What-If tool and the per-item SHAP explanation in the
+Forecast Explorer -- both imported directly from evidence.py.
 
 Theme colors live in .streamlit/config.toml (Streamlit's native theming,
 the equivalent of R Shiny's bslib::bs_theme()) so native widgets --
@@ -41,6 +42,7 @@ from src.evaluation.evidence import (
 )
 
 BUNDLE_PATH = REPO_ROOT / "src" / "evaluation" / "evidence_bundle.pkl"
+MONITORING_BUNDLE_PATH = REPO_ROOT / "src" / "monitoring" / "monitoring_bundle.pkl"
 
 # ============================================================================
 # PALETTE (mirrors .streamlit/config.toml -- kept here too since Plotly
@@ -70,8 +72,8 @@ st.set_page_config(
 # CUSTOM CSS -- only for things the theme config can't style: status badges,
 # section headers, KPI card accents, caution/limitation boxes. Every color
 # below is set explicitly (no reliance on inherited/default text color),
-# since that inheritance gap was the root cause of last round's invisible-
-# text bugs.
+# since that inheritance gap was the root cause of an earlier round's
+# invisible-text bugs.
 # ============================================================================
 
 st.markdown(f"""
@@ -126,7 +128,9 @@ st.markdown(f"""
     div[data-testid="stMetricValue"] {{ color: {COLOR_PRIMARY} !important; }}
     div[data-testid="stMetricDelta"] {{ color: {COLOR_SECONDARY} !important; }}
 
-    /* Status badges */
+    /* Status badges -- shared by forecast-status (Tab 2) and
+       monitoring-status (Tab 4); same 3-tier visual language reused
+       deliberately so "good/caution/bad" reads consistently everywhere. */
     .status-badge {{
         display: inline-block;
         padding: 4px 14px;
@@ -174,7 +178,7 @@ st.markdown(f"""
         font-size: 0.92rem;
     }}
     /* Stable, documented targeting via st.container(key=...) -- NOT an
-       internal/minified Streamlit class name, which broke last round. */
+       internal/minified Streamlit class name. */
     div.st-key-vegetable_selector_box {{
         border: 3px solid {COLOR_CAUTION};
         border-radius: 10px;
@@ -208,10 +212,16 @@ def status_badge(status: str) -> str:
     return f'<span class="status-badge {cls}">{status}</span>'
 
 
+def monitoring_status_badge(status: str) -> str:
+    """Same visual language as status_badge() (green/amber/orange), mapped
+    to the monitoring module's own 3 states instead of forecast-currentness."""
+    cls = {"Normal": "status-current", "Warning": "status-older", "Critical": "status-none"}.get(status, "status-none")
+    return f'<span class="status-badge {cls}">{status}</span>'
+
+
 def style_fig(fig, height=360, show_legend=True):
     """Applied to every Plotly figure. Plotly does NOT inherit Streamlit's
-    theme -- every color here is explicit, which is what last round's
-    invisible-axis-label bug was missing."""
+    theme -- every color here is explicit."""
     fig.update_layout(
         height=height,
         plot_bgcolor="white",
@@ -235,7 +245,7 @@ def style_fig(fig, height=360, show_legend=True):
 
 
 # ============================================================================
-# DATA LOADING (cached -- bundle is read once per session, not per rerun)
+# DATA LOADING (cached -- bundles are read once per session, not per rerun)
 # ============================================================================
 
 @st.cache_resource
@@ -249,12 +259,20 @@ def load_bundle():
     return joblib.load(BUNDLE_PATH)
 
 
+@st.cache_resource
+def load_monitoring_bundle():
+    if not MONITORING_BUNDLE_PATH.exists():
+        return None  # Monitoring tab degrades gracefully rather than crashing the whole app
+    return joblib.load(MONITORING_BUNDLE_PATH)
+
+
 bundle = load_bundle()
 forward = bundle["forward_forecasts"]
 narrative = bundle["narrative_content"]
 labels = narrative["labels"]
 highlights = bundle["dashboard_highlights"]
 trend_series = bundle["trend_series"]
+mbundle = load_monitoring_bundle()
 
 RANGE_TERM = labels["range_term"]  # "95% Demand Range" -- never CI/PI anywhere below
 
@@ -272,7 +290,10 @@ n_current = int((forward["forecast_status"] == "Current forecast").sum())
 n_older = int(forward["forecast_status"].str.startswith("Older", na=False).sum())
 n_none = int((forward["forecast_status"] == "No forecast available").sum())
 
-tab1, tab2, tab3 = st.tabs(["\U0001F4CA Forecast Overview", "\U0001F50D Forecast Explorer", "\u2699\uFE0F Model Details"])
+tab1, tab2, tab3, tab4 = st.tabs([
+    "\U0001F4CA Forecast Overview", "\U0001F50D Forecast Explorer",
+    "\u2699\uFE0F Model Details", "\U0001F6A6 Monitoring & Governance",
+])
 
 # ============================================================================
 # TAB 1 -- FORECAST OVERVIEW
@@ -597,3 +618,91 @@ with tab3:
 
     section_header("Human Oversight & Transparency")
     st.markdown(f'<div class="info-box">{narrative["transparency_statement"]}</div>', unsafe_allow_html=True)
+
+# ============================================================================
+# TAB 4 -- MONITORING & GOVERNANCE (Task 7)
+# Backtested/simulated monitoring -- see disclaimer, surfaced first and
+# prominently, not buried. Designed as a centralized, analyst/governance-
+# facing view: in a production rollout this tab would sit behind role-based
+# access (e.g. via streamlit-authenticator) so the Procurement Manager's
+# view stays focused on Tabs 1-3. Not implemented here -- see report.
+# ============================================================================
+
+with tab4:
+    tab_question("Is the model still performing as expected?")
+
+    if mbundle is None:
+        st.markdown(
+            '<div class="caution-box">Monitoring data not found. Run '
+            '<code>python src/monitoring/monitoring.py</code> from the repo root to generate '
+            '<code>src/monitoring/monitoring_bundle.pkl</code>.</div>',
+            unsafe_allow_html=True,
+        )
+    else:
+        st.markdown(f'<div class="caution-box"><b>{mbundle["disclaimer"]}</b></div>', unsafe_allow_html=True)
+
+        mo1, mo2, mo3 = st.columns(3)
+        with mo1:
+            st.markdown("**Overall Status**")
+            st.markdown(monitoring_status_badge(mbundle["overall_status"]), unsafe_allow_html=True)
+            st.caption(f"Most recent monitoring month: {mbundle['latest_month']}")
+        with mo2:
+            st.markdown("**Reference Period**")
+            ref = mbundle["reference_period"]
+            st.caption(f"{pd.Timestamp(ref['start']):%b %Y} \u2013 {pd.Timestamp(ref['end']):%b %Y} (training data)")
+        with mo3:
+            st.markdown("**Monitoring Period**")
+            st.caption(", ".join(mbundle["monitoring_period"]["months"]) + " (backtested)")
+
+        section_header("Performance Monitoring")
+        st.caption(mbundle["narrative"]["performance_explanation"])
+        perf_tier = mbundle["performance_by_tier"].copy()
+        perf_tier_display = perf_tier.rename(columns={
+            "month": "Month", "volume_tier": "Volume Tier", "wape_pct": "WAPE %",
+            "baseline_wape_pct": "Baseline WAPE %", "relative_change_pct": "Change vs. Baseline %",
+            "status": "Status",
+        })[["Month", "Volume Tier", "WAPE %", "Baseline WAPE %", "Change vs. Baseline %", "Status"]].round(1)
+        st.dataframe(perf_tier_display, hide_index=True, width='stretch')
+
+        fig_perf = px.line(
+            perf_tier, x="month", y="wape_pct", color="volume_tier", markers=True,
+            labels={"wape_pct": "WAPE (%)", "month": "", "volume_tier": "Volume Tier"},
+            color_discrete_sequence=[COLOR_PRIMARY, COLOR_SECONDARY, COLOR_CAUTION],
+        )
+        style_fig(fig_perf, height=320)
+        st.plotly_chart(fig_perf, width='stretch', key='tab4_perf_chart')
+
+        section_header("Drift Monitoring")
+        st.caption(mbundle["narrative"]["drift_explanation"])
+        drift_display = mbundle["drift"].rename(columns={
+            "feature": "Feature", "volume_tier": "Volume Tier", "month": "Month",
+            "psi": "PSI", "status": "Status",
+        })[["Feature", "Volume Tier", "Month", "PSI", "Status"]].round(3)
+        st.dataframe(drift_display, hide_index=True, width='stretch', height=320)
+
+        section_header("Fairness Monitoring")
+        st.caption(mbundle["narrative"]["fairness_explanation"])
+        fair_display = mbundle["fairness"].rename(columns={
+            "month": "Month", "tier_wape_gap_pp": "Tier WAPE Gap (pp)",
+            "baseline_gap_pp": "Baseline Gap (pp)", "change_vs_baseline_pp": "Change vs. Baseline (pp)",
+            "worst_performing_tier": "Worst-Performing Tier", "status": "Status",
+        })[["Month", "Tier WAPE Gap (pp)", "Baseline Gap (pp)", "Change vs. Baseline (pp)", "Worst-Performing Tier", "Status"]].round(1)
+        st.dataframe(fair_display, hide_index=True, width='stretch')
+
+        section_header("Incident Response")
+        for level in ["Normal", "Warning", "Critical"]:
+            info = mbundle["incident_response"][level]
+            st.markdown(
+                f'<div class="limitation-box">{monitoring_status_badge(level)}<br><br>'
+                f'<b>Meaning:</b> {info["meaning"]}<br>'
+                f'<b>Action:</b> {info["action"]}</div>',
+                unsafe_allow_html=True,
+            )
+
+        section_header("Model Decommissioning")
+        widget_label("Retirement triggers")
+        for trig in mbundle["decommissioning_plan"]["triggers"]:
+            st.markdown(f"- {trig}")
+        widget_label("Decommissioning process")
+        for i, step in enumerate(mbundle["decommissioning_plan"]["process"], 1):
+            st.markdown(f"{i}. {step}")
