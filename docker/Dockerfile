@@ -1,12 +1,22 @@
 # FreshMart -- one multi-stage Dockerfile for all three local-demo
-# containers (pipeline / api / dashboard), instead of separate Dockerfiles
+# containers (pipeline / dashboard / api), instead of separate Dockerfiles
 # per service. docker-compose.yml builds each service from a different
 # `target:` stage of this same file.
 #
+# STAGE ORDER MATTERS: `api` is deliberately the LAST stage. Render's
+# Docker deployment does not support selecting a build --target for
+# multi-stage Dockerfiles, so a plain `docker build` (what Render runs)
+# defaults to building whichever stage is last in the file. Since `api` is
+# the one service we're actually deploying publicly (on Render), it has to
+# be last. `dashboard` is only ever built locally via docker-compose's
+# explicit `target: dashboard` -- Streamlit Cloud deploys the real
+# dashboard directly from the Python app, not from this Dockerfile at all
+# -- so moving it earlier in the file changes nothing about how it's used.
+#
 # Build a single stage directly with:
 #   docker build --target pipeline  -t freshmart-pipeline  -f docker/Dockerfile .
-#   docker build --target api       -t freshmart-api       -f docker/Dockerfile .
 #   docker build --target dashboard -t freshmart-dashboard -f docker/Dockerfile .
+#   docker build --target api       -t freshmart-api       -f docker/Dockerfile .
 
 FROM python:3.12-slim AS base
 WORKDIR /app
@@ -37,7 +47,28 @@ CMD ["sh", "-c", "python -m pytest tests/ -v && python src/data_prep/run_pipelin
 
 
 # ============================================================================
-# STAGE: api -- Prediction API (Module 4), serves /predict.
+# STAGE: dashboard -- Stakeholder + Monitoring dashboard (Module 5 / Task 7).
+# Reuses dashboards/requirements.txt directly -- the same file Streamlit
+# Cloud reads for the actual production deployment, so this container's
+# dependencies match the real live app, not a separate guess at it.
+# Local docker-compose demo only -- NOT how the real dashboard is deployed.
+# ============================================================================
+FROM base AS dashboard
+
+COPY dashboards/requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+COPY src/ ./src/
+COPY dashboards/ ./dashboards/
+COPY .streamlit/ ./.streamlit/
+
+EXPOSE 8501
+CMD ["streamlit", "run", "dashboards/app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+
+
+# ============================================================================
+# STAGE: api -- Prediction API (Module 4), serves /predict. LAST STAGE --
+# see note at the top of this file for why that matters for Render.
 # Short, stable dependency list -- installed directly, no separate
 # requirements file needed for 7 packages. NOT the root requirements.txt
 # (which also pulls in Airflow/Great Expectations/MLflow -- unnecessary
@@ -53,23 +84,8 @@ RUN pip install --no-cache-dir \
 COPY src/models/ ./src/models/
 
 EXPOSE 8000
-CMD ["uvicorn", "src.models.api:app", "--host", "0.0.0.0", "--port", "8000"]
-
-
-# ============================================================================
-# STAGE: dashboard -- Stakeholder + Monitoring dashboard (Module 5 / Task 7).
-# Reuses dashboards/requirements.txt directly -- the same file Streamlit
-# Cloud reads for the actual production deployment, so this container's
-# dependencies match the real live app, not a separate guess at it.
-# ============================================================================
-FROM base AS dashboard
-
-COPY dashboards/requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-COPY src/ ./src/
-COPY dashboards/ ./dashboards/
-COPY .streamlit/ ./.streamlit/
-
-EXPOSE 8501
-CMD ["streamlit", "run", "dashboards/app.py", "--server.address=0.0.0.0", "--server.port=8501"]
+# Binds to Render's dynamically-assigned $PORT if set, falling back to
+# 8000 for local `docker run`/docker-compose (where PORT is never set) --
+# so local behavior is unchanged and Render deployment works without a
+# separate deployment-specific file.
+CMD ["sh", "-c", "uvicorn src.models.api:app --host 0.0.0.0 --port ${PORT:-8000}"]

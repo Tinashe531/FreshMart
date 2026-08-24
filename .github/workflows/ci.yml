@@ -1,0 +1,61 @@
+name: CI
+
+# Kept deliberately simple, matching this capstone's scope: run the
+# existing test suite, confirm the evidence/monitoring/retraining scripts
+# still import cleanly (import only -- their __main__ blocks do real work:
+# writing bundle files, logging to MLflow -- CI never triggers those), and
+# smoke-test the live dashboard against the committed evidence/monitoring
+# bundles. No deployment stage, no complex multi-environment matrix.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Cache pip
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/pip
+          key: ${{ runner.os }}-pip-${{ hashFiles('requirements.txt', 'dashboards/requirements.txt') }}
+
+      - name: Install pipeline dependencies (tests, data prep, models, MLflow)
+        run: pip install -r requirements.txt
+
+      - name: Install dashboard dependencies (Streamlit Cloud reads this file separately)
+        run: pip install -r dashboards/requirements.txt
+
+      - name: Run pytest (Module 3 pipeline tests)
+        run: pytest tests/ -v
+
+      - name: Confirm evidence/monitoring/retraining scripts import cleanly (import only, no execution)
+        run: |
+          python -c "
+          import importlib
+          for mod in ['src.evaluation.evidence', 'src.monitoring.monitoring', 'src.retraining.retrain']:
+              importlib.import_module(mod)
+              print(f'OK: {mod}')
+          "
+
+      - name: Smoke-test the dashboard (all 4 tabs load without error)
+        run: |
+          python -c "
+          from streamlit.testing.v1 import AppTest
+          at = AppTest.from_file('dashboards/app.py', default_timeout=60)
+          at.run()
+          if at.exception:
+              print('FAIL:', at.exception[0])
+              raise SystemExit(1)
+          print(f'PASS: dashboard loads cleanly, {len(at.tabs)} tabs')
+          "
