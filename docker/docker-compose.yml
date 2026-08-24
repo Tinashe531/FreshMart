@@ -1,0 +1,49 @@
+# FreshMart -- local multi-container demo.
+#
+# For LOCAL DEMONSTRATION only. The actual live deployment is Streamlit
+# Community Cloud (see README) -- this compose file is not what runs there;
+# it exists so the full stack (pipeline, API, dashboard) can be brought up
+# together on a laptop for review.
+#
+# All three services build from ONE multi-stage docker/Dockerfile (see that
+# file's comments) via a different `target:` per service -- not three
+# separate Dockerfiles.
+#
+# Honest note on integration: the three services are independent, not
+# chained. The dashboard calls the model directly in-process (via
+# src/evaluation/evidence.py's run_what_if()/explain_forecast_live()), not
+# over HTTP to the api service -- so there is no real runtime dependency
+# between "dashboard" and "api" for compose to express with `depends_on`.
+# Showing a false dependency here would misrepresent the actual
+# architecture, so this file doesn't do that.
+
+services:
+
+  # Reproduces the pipeline's processing/validation/test environment
+  # (Module 3). Its default CMD already runs pytest + the full
+  # ingest->clean->transform->validate->governance chain end to end.
+  pipeline:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: pipeline
+    volumes:
+      - ./data/processed:/app/data/processed
+
+  # Prediction API (Module 4). Publicly-deployable /predict endpoint.
+  api:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: api
+    ports:
+      - "8000:8000"
+
+  # Stakeholder + Monitoring dashboard (Module 5 / Task 7).
+  dashboard:
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+      target: dashboard
+    ports:
+      - "8501:8501"
