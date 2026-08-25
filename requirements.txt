@@ -1,7 +1,7 @@
 # FreshMart ML Pipeline Module 4
 # Install with: pip install -r requirements.txt
 
-pandas==3.0.2
+pandas==2.2.3
 numpy==2.4.4
 pyarrow>=17.0.0
 
