@@ -3,7 +3,7 @@
 A decision-support analytics project for vegetable procurement planning at FreshMart's flagship store, from problem definition through a deployed, monitored forecasting model.
 
 **Live Dashboard (includes Monitoring & Governance):** https://freshmart-vz2kmxfpq6cwmrkfn5ahix.streamlit.app/
-**Live API:** https://freshmart-9xou.onrender.com/docs
+**Live API:** [https://freshmart-9xou.onrender.com/docs](https://freshmart-9xou.onrender.com/docs)
 
 ## Project Purpose
 
