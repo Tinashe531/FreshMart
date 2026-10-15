@@ -15,6 +15,16 @@ FreshMart needs to anticipate vegetable demand for upcoming replenishment cycles
 
 **The dashboard does not recommend an order quantity.** It is decision support only - the Procurement Manager makes the final call. This is a deliberate scope boundary, not an omission: Module 5's assignment explicitly separates "communicate model results clearly" from "make a recommendation," and the project follows that boundary throughout.
 
+## Data Source
+
+The raw data in `data/raw/` (annex1-4) comes from a public dataset:
+
+YAPWH. (2022). *Supermarket Sales Data* [Data set]. Kaggle.
+https://www.kaggle.com/datasets/yapwh1208/supermarket-sales-data
+
+It contains transaction-level sales of vegetables in a supermarket, with an item master, wholesale prices and loss rates. It is used here for educational and
+portfolio purposes. All rights to the data remain with the original author. Please refer to the Kaggle page for the dataset's licence and terms of use.
+
 ## Project Scope
 
 The pilot covers high-volume vegetables at FreshMart's flagship store only. Automated ordering, inventory optimization, and expansion to additional stores are explicitly out of scope for this phase (see `docs/vision_document.docx`, Module 1).
@@ -35,7 +45,7 @@ The pilot covers high-volume vegetables at FreshMart's flagship store only. Auto
 | Monitoring & Governance (Task 7) | **Live** - integrated as a tab in the same app (see *Architecture note* below) | Same URL, "Monitoring & Governance" tab |
 | Prediction API (Module 4, `/predict`) | **Live** | https://freshmart-9xou.onrender.com/docs |
 | CI/CD (GitHub Actions) | **Live** - runs on every push | `.github/workflows/ci.yml` |
-| Docker Compose (multi-container local demo) | **Available** - pipeline, API, and dashboard containers, verified building and running locally | `docker-compose.yml` |
+| Docker Compose (multi-container local demo) | **Available** - pipeline, API, and dashboard containers, verified building and running locally | `docker/docker-compose.yml.` |
 
 *Architecture note:* the monitoring dashboard is deliberately integrated into the same Streamlit app as the stakeholder dashboard rather than deployed separately, for centralized access and easier cross-referencing between forecast data and monitoring findings. A production rollout would add role-based access (e.g. via `streamlit-authenticator`) so the Procurement Manager's view stays focused on forecasting while analysts/governance see the Monitoring tab — not implemented in this student capstone, documented as a design intention in the final report.
 
@@ -47,7 +57,7 @@ The pilot covers high-volume vegetables at FreshMart's flagship store only. Auto
 - **Serving:** FastAPI (`/predict` endpoint)
 - **Dashboard:** Streamlit, Plotly
 - **Governance & testing:** pytest, custom bias/PII checks (`src/governance/`)
-- **Environment:** Docker (pipeline container); Docker Compose in progress
+- **Environment:** Docker (pipeline, API and dashboard containers); Docker Compose for local multi-container runs.
 
 ## Repository Structure
 
